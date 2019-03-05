@@ -125,9 +125,16 @@ to your virtual environment.
 Unix
 ++++
 
-Use ``build.sh`` to build ``build/pyDBoW.so``, which you should then put on your ``PYTHONPATH``.
+Use ``build.sh`` to build ``build/pyDBoW.so`` and ``makedist.sh`` to generate a Python package and wheel.
 
-Check ``.travis.yml`` for environment variables.
+Next, you should ensure the directory containing the ``.so`` built earlier is on your ``PYTHONPATH``::
+
+    export PYTHONPATH="$PYTHONPATH:$PWD/build"
+
+Afterwards, you should be able to simply run the example code from the start of this document.
+
+
+Check ``.travis.yml`` for environment variables and more information.
 
 .. note::
 
