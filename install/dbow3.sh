@@ -11,5 +11,5 @@ cmake -DOpenCV_DIR=$CWD/opencv3/build \
       -DCMAKE_INSTALL_PREFIX=$CWD/DBow3 \
       -DCMAKE_CXX_FLAGS="-fPIC" \
       -DCMAKE_C_FLAGS="-fPIC" \
-      -DBUILD_UTILS=OFF .. && make && make install 
+      -DBUILD_UTILS=OFF .. && make -j8 && make install 
 cd ../..

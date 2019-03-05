@@ -2,9 +2,9 @@
 
 
 cd build
-mkdir dist
+mkdir -p dist
 cd dist
-mkdir pyDBoW3
+mkdir -p pyDBoW3
 cp ../pyDBoW3.so pyDBoW3
 cp ../../src/__init__.py pyDBoW3
 cp ../../src/setup.py .
@@ -13,7 +13,6 @@ cp ../../src/MANIFEST.in .
 if [[ "$BUILD_PYTHON" == "python3" ]]; then
     python3 setup.py bdist_wheel
 else
-    python3 setup.py bdist_wheel
+    python setup.py bdist_wheel
 fi
 
-cd ../..

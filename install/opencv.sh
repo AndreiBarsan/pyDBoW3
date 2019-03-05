@@ -63,7 +63,7 @@ if [ "$BUILD_PYTHON" = "python3" ]; then
           -DPYTHON3_INCLUDE_DIR=$PYTHON_INCLUDES \
           -DPYTHON3_PACKAGES_PATH=$PYTHON_LIBS \
           ..
-    make -j12 || exit 1
+    make -j24 || exit 1
     sudo make install
 else
     echo "Building OpenCV with Python2 support"
@@ -101,6 +101,6 @@ else
           -DPYTHON_INCLUDE_DIR=$(python -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())") \
           -DPYTHON_PACKAGES_PATH=$(python -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())") \
           ..
-    make -j12 || exit 1
+    make -j24 || exit 1
     sudo make install
 fi

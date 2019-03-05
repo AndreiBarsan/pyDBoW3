@@ -2,14 +2,17 @@
 
 set -x
 
-cd ${0%%$(basename $0)}
+# cd ${0%%$(basename $0)}
 CWD=`pwd`
+
+echo "Working dir:"
+pwd
 
 cd install
 
-chmod +x boost.sh && ./boost.sh || exit 1
+# chmod +x boost.sh && ./boost.sh || exit 1
 
-chmod +x opencv.sh && ./opencv.sh || exit 1
+# chmod +x opencv.sh && ./opencv.sh || exit 1
 
 chmod +x dbow3.sh && ./dbow3.sh || exit 1
 
@@ -18,13 +21,13 @@ cd ..
 mkdir build
 cd build
 
-if [[ "$BUILD_PYTHON" == "python3" ]]; then
-  BUILD_PYTHON3="ON"
-  pip3 install wheel
-else
-  BUILD_PYTHON3="OFF"
-  pip install wheel
-fi
+# if [[ "$BUILD_PYTHON" == "python3" ]]; then
+  # BUILD_PYTHON3="ON"
+  # pip3 install wheel
+# else
+  # BUILD_PYTHON3="OFF"
+  # pip install wheel
+# fi
 
 if [[ "$OSTYPE" == "linux-gnu" || "$OSTYPE" == "linux" ]]; then
     cmake -DBUILD_PYTHON3=$BUILD_PYTHON3 \
