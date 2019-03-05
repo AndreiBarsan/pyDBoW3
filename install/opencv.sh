@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 CWD=`pwd`
 git clone https://github.com/opencv/opencv.git opencv3

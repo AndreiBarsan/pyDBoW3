@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 if [[ "$OSTYPE" == "linux-gnu" || "$OSTYPE" == "linux" ]]; then
     echo "Using system boost package"
