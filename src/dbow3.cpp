@@ -117,6 +117,13 @@ public:
 		return database->add(features, NULL, NULL);
 	}
 
+    unsigned int addAndGetFeature(const cv::Mat &features) {
+        std::cout << "Should return BoW vector or something." << std::endl;
+        // Note to self: Something like this is safe to return and gets converted to numpy as expected.
+//		return cv::Mat(n, m, CV_8UC1);
+        return database->add(features, NULL, NULL);
+    }
+
 	std::vector<DBoW3::Result> query(const  cv::Mat &features, int max_results = 1, int max_id = -1) {
 		DBoW3::QueryResults results;
 		database->query(features, results, max_results, max_id);
@@ -185,6 +192,7 @@ namespace fs {
 				.def("load", &Database::load)
 				.def("loadVocabulary", &Database::loadVocabulary)
 				.def("add", &Database::add)
+				.def("addAndGetFeature", &Database::addAndGetFeature)
 				.def("query", &Database::query, py::return_value_policy<py::return_by_value>());
 
 			py::class_<DBoW3::Result>("Result")

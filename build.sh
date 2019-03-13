@@ -1,5 +1,6 @@
 #!/bin/bash
 
+set -euo pipefail
 set -x
 
 # cd ${0%%$(basename $0)}
@@ -11,14 +12,15 @@ pwd
 cd install
 
 # chmod +x boost.sh && ./boost.sh || exit 1
-
 # chmod +x opencv.sh && ./opencv.sh || exit 1
 
 chmod +x dbow3.sh && ./dbow3.sh || exit 1
 
 cd ..
 
-mkdir build
+BUILD_PYTHON3=no
+
+mkdir -p build
 cd build
 
 # if [[ "$BUILD_PYTHON" == "python3" ]]; then

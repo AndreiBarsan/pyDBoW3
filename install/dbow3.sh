@@ -1,6 +1,9 @@
 # Install DBow3
 CWD=`pwd`
-git clone https://github.com/rmsalinas/DBow3 DBow3
+
+# Removed so I don't accidentally overwrite my changes.
+# git clone https://github.com/rmsalinas/DBow3 DBow3
+
 cd DBow3
 mkdir build
 cd build

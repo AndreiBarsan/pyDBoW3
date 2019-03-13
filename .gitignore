@@ -29,3 +29,5 @@
 *.app
 build/
 install/DBow3/
+src/.idea/
+cmake-build-debug/
