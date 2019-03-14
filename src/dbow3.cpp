@@ -151,7 +151,7 @@ public:
 		int idx = 0;
 		for (auto const &kv : bow_vector) {
 			out_indices.at<int>(idx) = kv.first;
-			out_weights.at<int>(idx) = kv.second;
+			out_weights.at<float>(idx) = kv.second;
 			idx++;
 		}
 
