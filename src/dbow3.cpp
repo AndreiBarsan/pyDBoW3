@@ -55,6 +55,7 @@ private:
 	std::string var_string;
 };
 
+
 class Vocabulary
 {
 public:
@@ -66,11 +67,11 @@ public:
 	~Vocabulary() {
 		delete vocabulary;
 	}
-	
+
 	void create(const  std::vector<cv::Mat>   &training_features) {
 		vocabulary->create(training_features);
 	}
-	
+
 	void clear() {
 		vocabulary->clear();
 	}
@@ -83,14 +84,29 @@ public:
 		vocabulary->save(path, binary_compressed);
 	}
 
-	DBoW3::BowVector transform(const  std::vector<cv::Mat> & features) {
+//	DBoW3::BowVector transform(const  std::vector<cv::Mat> & features) {
+	cv::Mat transform(const  std::vector<cv::Mat> & features) {
 		DBoW3::BowVector word;
+		std::cout << "Will process " << features.size() << " features, each "
+			<< features[0].rows << ", " << features[0].cols << " in size. " << std::endl;
 		vocabulary->transform(features, word);
-		return word;
+
+		std::cout << "Computed BoW vector:" << std::endl;
+		for (const auto &el : word) {
+			std::cout << el.first << ", " << el.second << std::endl;
+		}
+		std::cout << word << std::endl;
+
+		return cv::Mat(10, 10, CV_8UC1);
+//		return word;
 	}
 
 	double score(const  DBoW3::BowVector &A, const DBoW3::BowVector &B) {
 		return vocabulary->score(A, B);
+	}
+
+	unsigned int size() const {
+		return vocabulary->size();
 	}
 
 	DBoW3::Vocabulary * vocabulary;
@@ -117,12 +133,37 @@ public:
 		return database->add(features, NULL, NULL);
 	}
 
-    unsigned int addAndGetFeature(const cv::Mat &features) {
-        std::cout << "Should return BoW vector or something." << std::endl;
-        // Note to self: Something like this is safe to return and gets converted to numpy as expected.
-//		return cv::Mat(n, m, CV_8UC1);
-        return database->add(features, NULL, NULL);
-    }
+	/**
+	 * @brief Adds the features to the database and returns the BoW representation of the features.
+	 * @param features A single image's ORB features.
+	 * @return A tuple consisting of the list of words and their weights. It consists in a cv::Mat1i of 1 row and F
+	 * 		   columns and a cv::Mat1f of 1 row and F columns. F is at most the total number of features passed as
+	 * 		   input, but can be smaller in the (likely) event that multiple features map to the same visual word.
+	 */
+	py::tuple addAndGetBow(const cv::Mat &features) {
+		assert(features.rows == 1);
+		DBoW3::BowVector bow_vector;
+		this->database->add(features, &bow_vector, nullptr);
+
+		// Pack the bow_vector, which is basically a map, into a list of keys and values.
+		cv::Mat1i out_indices(1, bow_vector.size());
+		cv::Mat1f out_weights(1, bow_vector.size());
+		int idx = 0;
+		for (auto const &kv : bow_vector) {
+			out_indices.at<int>(idx) = kv.first;
+			out_weights.at<int>(idx) = kv.second;
+			idx++;
+		}
+
+		return py::make_tuple(out_indices, out_weights);
+	}
+
+	py::list multiAddAndGetBow(const cv::Mat &features) {
+	  	// XXX(andreib): Populate this placeholder. Important for performance.
+		std::vector<int> dummy = {1, 2, 3};
+		return py::list(dummy);
+
+	}
 
 	std::vector<DBoW3::Result> query(const  cv::Mat &features, int max_results = 1, int max_id = -1) {
 		DBoW3::QueryResults results;
@@ -183,7 +224,8 @@ namespace fs {
 				.def("create", &Vocabulary::create)
 				.def("transform", &Vocabulary::transform, py::return_value_policy<py::return_by_value>())
 				.def("score", &Vocabulary::score)
-				.def("clear", &Vocabulary::clear);
+				.def("clear", &Vocabulary::clear)
+				.def("size", &Vocabulary::size);
 
 			py::class_<Database>("Database")
 				.def(py::init<py::optional<std::string> >(py::arg("path") = std::string()))
@@ -192,7 +234,7 @@ namespace fs {
 				.def("load", &Database::load)
 				.def("loadVocabulary", &Database::loadVocabulary)
 				.def("add", &Database::add)
-				.def("addAndGetFeature", &Database::addAndGetFeature)
+				.def("addAndGetBow", &Database::addAndGetBow, py::return_value_policy<py::return_by_value>())
 				.def("query", &Database::query, py::return_value_policy<py::return_by_value>());
 
 			py::class_<DBoW3::Result>("Result")
